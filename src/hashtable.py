@@ -55,10 +55,14 @@ class HashTable:
         index = self._hash_mod(key)
         if self.storage[index] is not None:
             current = self.storage[index]
-            while current.next is not None:
+            while current.next is not None and current.key is not key:
                 current = current.next
-            current.next = LinkedPair(key, value)
-            return
+            if current.key == key:
+                current.value = value
+                return
+            else: 
+                current.next = LinkedPair(key, value)
+                return
         else:
             self.storage[index] = LinkedPair(key, value)
         
@@ -90,7 +94,7 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-        print(f'HERE IS THE KEY: {key}')
+        # print(f'HERE IS THE KEY: {key}')
         # print(f'************** {self.storage[index]}')
         if self.storage[index] is None:
             return None
@@ -113,16 +117,15 @@ class HashTable:
 
         Fill this in.
         '''
+
         self.capacity *= 2
-        store = [None] * self.capacity
-        for i in [item for item in self.storage if item != None]:
+        new_store = list(self.storage)
+        self.storage = [None] * self.capacity
+        for i in [item for item in new_store if item != None]:
             current = i
             while current is not None:
-                store[self._hash_mod(current.key)] = LinkedPair(
-                    current.key, current.value)
+                self.insert(current.key, current.value)
                 current = current.next
-
-        self.storage = store
 
 
 
