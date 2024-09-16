@@ -51,7 +51,21 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        index = self._hash_mod(key)
+        if self.storage[index] is not None:
+            current = self.storage[index]
+            while current.next is not None and current.key is not key:
+                current = current.next
+            if current.key == key:
+                current.value = value
+                return
+            else: 
+                current.next = LinkedPair(key, value)
+                return
+        else:
+            self.storage[index] = LinkedPair(key, value)
+        
 
 
 
@@ -63,7 +77,12 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        if self.storage[index] is None:
+            print('Warning: key not found')
+        else:
+            self.storage[index] = None
+        
 
 
     def retrieve(self, key):
@@ -74,8 +93,22 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
-
+        index = self._hash_mod(key)
+        # print(f'HERE IS THE KEY: {key}')
+        # print(f'************** {self.storage[index]}')
+        if self.storage[index] is None:
+            return None
+        else:
+            current = self.storage[index]
+            if current.key == key:
+                return current.value
+            while current is not None:
+                if current.key == key:
+                    return current.value
+                    # print(current.value)
+                else:
+                    current = current.next
+            return None
 
     def resize(self):
         '''
@@ -84,7 +117,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
+        self.capacity *= 2
+        new_store = list(self.storage)
+        self.storage = [None] * self.capacity
+        for i in [item for item in new_store if item != None]:
+            current = i
+            while current is not None:
+                self.insert(current.key, current.value)
+                current = current.next
 
 
 
